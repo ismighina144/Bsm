@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Kelautan / Navigasi (Maritime Quiz)</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen py-10 px-4">
+    <div class="max-w-3xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold tracking-tight text-blue-400">Kuis Kelautan & Navigasi</h1>
+            <p class="text-slate-400 mt-2">Uji pengetahuan Anda seputar aturan pelayaran, navigasi, dan keselamatan kerja di atas kapal.</p>
+        </header>
+
+        <div id="quiz-container" class="space-y-6">
+            <!-- Questions will be injected here via JavaScript -->
+        </div>
+
+        <div id="result-container" class="hidden mt-8 p-6 bg-slate-800 rounded-xl border border-slate-700 text-center">
+            <h2 class="text-2xl font-bold text-blue-400 mb-2">Hasil Kuis Anda</h2>
+            <p id="score-text" class="text-xl mb-4"></p>
+            <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors cursor-pointer">
+                Ulangi Kuis
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "When at anchor, what should the OOW do if the vessel appears to be dragging her anchor?",
+                options: [
+                    "Ask the chief engineer to start the engine",
+                    "Ask the bosun to check the anchor",
+                    "Call the master at once",
+                    "Any of the other options"
+                ],
+                correct: 3,
+                rationale: "When a vessel drags anchor, immediate actions include calling the master, alerting engineering to start engines, and verifying the anchor status."
+            },
+            {
+                question: "At the commencement of a sea voyage the Master, a Pilot, the OOW and 2 ratings are present on the bridge. Who is in charge?",
+                options: [
+                    "Always the Pilot whenever he is on board",
+                    "Either the Pilot or the Master in accordance with the owner's instructions",
+                    "The Master can designate either the Pilot or the OOW to be in charge",
+                    "Always the Master"
+                ],
+                correct: 3,
+                rationale: "The presence of a pilot does not relieve the Master from command and responsibility for the safety of the vessel."
+            },
+            {
+                question: "What kind of vessel may sound a fog signal consisting of four short blasts?",
+                options: [
+                    "A fishing vessel",
+                    "A vessel constrained by her draught",
+                    "A vessel engaged on pilotage duty",
+                    "A vessel being towed"
+                ],
+                correct: 2,
+                rationale: "A vessel manned when engaged on pilotage duty may sound an identity signal consisting of four short blasts in addition to fog signals."
+            },
+            {
+                question: "If a vessel of length 20metres or more is required by the rules to carry two or three lights in a vertical line, at what height above the hull (except where a towing light is required) must the lowest of these be placed?",
+                options: [
+                    "At least 1.5 metres",
+                    "So it can be seen at a distance of 1000m",
+                    "Not less than 4.5 metres",
+                    "Not less than 4 metres"
+                ],
+                correct: 2,
+                rationale: "According to COLREGS, the lowest of such vertical lights must be placed at a height of not less than 4.5 metres above the hull."
+            },
+            {
+                question: "What signals must a vessel at anchor display?",
+                options: [
+                    "Code flag 'A' by day and a red light at night",
+                    "Code flag 'B' by day and a red light at night",
+                    "A large black square by day and a flashing white light at night",
+                    "A black ball hoisted at the bow by day and all round white lights at night"
+                ],
+                correct: 3,
+                rationale: "By day, a vessel at anchor displays a black ball in the fore part, and at night, all-round white lights visible from all directions."
+            },
+            {
+                question: "When proceeding along a narrow channel a vessel should........",
+                options: [
+                    "keep to the outer limit which lies on her port side.",
+                    "keep to the side which lies on her starboard side.",
+                    "keep to the side which lies on her port side.",
+                    "keep to the outer limit which lies on her starboard side."
+                ],
+                correct: 1,
+                rationale: "Rule 9 of COLREGS states that a vessel proceeding along a narrow channel shall keep to that side of the fairway which lies on her starboard side."
+            },
+            {
+                question: "What colour is the ship's starboard or right hand sidelight?",
+                options: [
+                    "Yellow",
+                    "Green",
+                    "White",
+                    "Red"
+                ],
+                correct: 1,
+                rationale: "The starboard sidelight is green, while the port sidelight is red."
+            },
+            {
+                question: "Is the lookout allowed to leave his post without being relieved?",
+                options: [
+                    "Only for short periods to go to the toilet.",
+                    "It depends on the situation",
+                    "No, it is not OK.",
+                    "Yes, it is OK."
+                ],
+                correct: 2,
+                rationale: "A lookout must never leave their post until properly relieved by another crew member."
+            },
+            {
+                question: "How would you respond to an order \"starboard ten\"?",
+                options: [
+                    "By turning the wheel to the left until 10 degrees is shown on the rudder indicator.",
+                    "By turning the wheel to starboard until 10 degrees is shown on the rudder indicator.",
+                    "By repeating the order and then executing it.",
+                    "By repeating the order, turning the wheel to starboard until 10 degrees is shown on the rudder indicator, then reporting \"ten degrees starboard, Sir.\""
+                ],
+                correct: 3,
+                rationale: "Standard marine communication requires repeating the order, executing it correctly, and reporting back when completed."
+            },
+            {
+                question: "If ordered to steer \"east\", how many degrees on the compass is it?",
+                options: [
+                    "045 degrees",
+                    "180 degrees",
+                    "270 degrees",
+                    "090 degrees"
+                ],
+                correct: 3,
+                rationale: "East corresponds to 090 degrees on the compass rose (North is 000/360, East is 090, South is 180, West is 270)."
+            },
+            {
+                question: "How many degrees are there on the rose of a magnetic or gyro compass?",
+                options: [
+                    "180",
+                    "420",
+                    "360",
+                    "270"
+                ],
+                correct: 2,
+                rationale: "A full circle compass rose contains 360 degrees."
+            },
+            {
+                question: "When must a vessel place a bridge lookout on duty?",
+                options: [
+                    "In poor visibility only",
+                    "At night only",
+                    "At night and in poor visibility",
+                    "All day"
+                ],
+                correct: 2,
+                rationale: "A dedicated lookout is strictly required during night hours and conditions of restricted visibility."
+            },
+            {
+                question: "When is a vessel required to maintain a lookout?",
+                options: [
+                    "When decided by the Captain.",
+                    "At night and when visibility is reduced.",
+                    "From sunset to sunrise.",
+                    "All the time at sea."
+                ],
+                correct: 3,
+                rationale: "Rule 5 of COLREGS mandates that every vessel shall at all times maintain a proper look-out by sight and hearing."
+            },
+            {
+                question: "When steering by gyro compass, what must a helmsman periodically do?",
+                options: [
+                    "Check the gyro compass course against the magnetic compass course.",
+                    "Alter course occasionally to ensure it is working properly.",
+                    "Adjust the speed and latitude settings on the gyro each watch.",
+                    "Allow for the rolling of the ship."
+                ],
+                correct: 0,
+                rationale: "The helmsman should regularly cross-check the gyro course with the magnetic compass to ensure accuracy."
+            },
+            {
+                question: "How many degrees are there in each point of the compass?",
+                options: [
+                    "11.25",
+                    "17.5",
+                    "15",
+                    "12"
+                ],
+                correct: 0,
+                rationale: "The compass is divided into 32 points, and 360 degrees divided by 32 equals 11.25 degrees per point."
+            },
+            {
+                question: "When on bridge lookout duty, what is your first responsibility?",
+                options: [
+                    "Clean the bridge",
+                    "Serve coffee to the captain",
+                    "Seek shelter",
+                    "Be alert, watch and listen"
+                ],
+                correct: 3,
+                rationale: "Maintaining constant vigilance, watching, and listening is the core responsibility of a lookout."
+            },
+            {
+                question: "After a lifting block has been dismantled, cleaned and reassembled, which of the following is checked?",
+                options: [
+                    "That the correct grease has been used.",
+                    "That the correct block has been dismantled.",
+                    "That all parts of the block have been cleaned.",
+                    "That all the split pins and locking devices have been replaced."
+                ],
+                correct: 3,
+                rationale: "Safety critical components like split pins and locking devices must always be verified to prevent accidental dismantling during heavy loads."
+            },
+            {
+                question: "Which is the hardest abrasive material used on abrasive wheels?",
+                options: [
+                    "Diamond",
+                    "White aluminium oxide",
+                    "Cubic boron nitride",
+                    "Silicon carbide"
+                ],
+                correct: 0,
+                rationale: "Diamond is the hardest naturally occurring material used for industrial abrasive applications."
+            },
+            {
+                question: "The solvent used with emulsion paint is which of the following?",
+                options: [
+                    "Cellulose thinners",
+                    "Mineral turpentine",
+                    "Diesel oil",
+                    "Water"
+                ],
+                correct: 3,
+                rationale: "Emulsion (water-based) paints use water as their solvent and thinning agent."
+            },
+            {
+                question: "What is a permit to work?",
+                options: [
+                    "Work orders from the senior officers",
+                    "The recommendations of the ship's safety committee",
+                    "A notification that you are qualified to carry out the work",
+                    "A complete check on preparedness prior to start of work"
+                ],
+                correct: 3,
+                rationale: "A permit to work is a formal documented safety procedure ensuring precautions and preparedness before hazardous tasks begin."
+            },
+            {
+                question: "When leaving paint spraying equipment for a long period, the gun should be.....",
+                options: [
+                    "left in the paint",
+                    "hung up to dry",
+                    "washed clean with thinners and left full of paraffin",
+                    "left in thinners"
+                ],
+                correct: 2,
+                rationale: "Proper maintenance requires thorough cleaning with thinners to prevent paint hardening inside the equipment."
+            },
+            {
+                question: "Which of these should not be done when preparing steel for painting?",
+                options: [
+                    "Wash with high-pressure sea water",
+                    "Remove scale and rust and then wirebrush",
+                    "Coat any bare metal with two coats of primer",
+                    "Wash with soap and water"
+                ],
+                correct: 0,
+                rationale: "Washing steel with high-pressure sea water leaves salt deposits on the metal, which accelerates rapid rusting under paint."
+            },
+            {
+                question: "Where is top-side paint applied?",
+                options: [
+                    "The ship's superstructure above the bridge",
+                    "The ship's hatch coamings",
+                    "The ship's hull above the load water line",
+                    "The ship's masts, cranes and derricks"
+                ],
+                correct: 2,
+                rationale: "Topsides refer to the outer sides of a vessel's hull situated between the waterline and the deck."
+            },
+            {
+                question: "What corrective action would you take if, when spraying a bulkhead, the paint developed into runs?",
+                options: [
+                    "Increase the spraying pressure",
+                    "Make the paint thinner",
+                    "Add more base paint to the mixture that is being sprayed",
+                    "Move the gun at a slower speed across the bulkhead"
+                ],
+                correct: 3,
+                rationale: "Moving the spray gun too slowly deposits too much paint in one area, causing runs. Moving faster prevents this."
+            },
+            {
+                question: "Paint used in engine rooms needs to be ....",
+                options: [
+                    "resistant to oils and chemicals",
+                    "self polishing",
+                    "resistant to sunlight",
+                    "easy to apply"
+                ],
+                correct: 0,
+                rationale: "Engine rooms frequently encounter petroleum oils, lubricants, and harsh chemicals, requiring specially resistant coatings."
+            },
+            {
+                question: "Which of these are attached to a lifejacket?",
+                options: [
+                    "Red light and orange smoke distress flares",
+                    "A light & a whistle",
+                    "A dye marker & shark repellant",
+                    "A radar transponder"
+                ],
+                correct: 1,
+                rationale: "SOLAS requirements state that lifejackets must be fitted with an approved lifejacket light and whistle."
+            },
+            {
+                question: "There are four principal dangers faced by evacuees in a survival craft. Which item below does NOT belong?",
+                options: [
+                    "Inability to get sufficient sleep, which will be fatal in days",
+                    "Inability to maintain body temperature, which will be fatal in hours",
+                    "Lack of water, which takes a few days to cause death",
+                    "Drowning, which is fatal in minutes"
+                ],
+                correct: 0,
+                rationale: "While lack of sleep is uncomfortable and fatiguing, the primary immediate fatal dangers in survival craft are drowning (minutes), hypothermia (hours), and dehydration/lack of water (days)."
+            }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, index) => {
+                let optionsHtml = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <label class="block p-3 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700/50 cursor-pointer transition-colors">
+                            <input type="radio" name="question-${index}" value="${optIndex}" class="mr-2 text-blue-500 focus:ring-blue-400">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700" id="q-block-${index}">
+                        <h3 class="text-lg font-semibold text-slate-200 mb-3">${index + 1}. ${q.question}</h3>
+                        <div class="space-y-2 mb-4">${optionsHtml}</div>
+                        <button onclick="checkAnswer(${index})" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer">
+                            Periksa Jawaban
+                        </button>
+                        <div id="feedback-${index}" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                    </div>
+                `;
+            });
+        }
+
+        function checkAnswer(index) {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const feedback = document.getElementById(`feedback-${index}`);
+            const q = quizData[index];
+
+            if (!selected) {
+                feedback.className = "mt-3 p-3 rounded-lg text-sm bg-amber-900/50 border border-amber-700 text-amber-200";
+                feedback.innerHTML = "Silakan pilih salah satu jawaban terlebih dahulu.";
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            const userChoice = parseInt(selected.value);
+            feedback.classList.remove('hidden');
+
+            if (userChoice === q.correct) {
+                feedback.className = "mt-3 p-3 rounded-lg text-sm bg-emerald-900/50 border border-emerald-700 text-emerald-200";
+                feedback.innerHTML = `<strong>Benar!</strong> ${q.rationale}`;
+            } else {
+                feedback.className = "mt-3 p-3 rounded-lg text-sm bg-rose-900/50 border border-rose-700 text-rose-200";
+                feedback.innerHTML = `<strong>Kurang tepat.</strong> Jawaban yang benar adalah: <em>${q.options[q.correct]}</em>.<br><br>${q.rationale}`;
+            }
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
+```eof
